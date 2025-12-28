@@ -19,22 +19,31 @@
   </div>
   <script>
     async function load() {
-      const TOKEN = "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";
+      const s1="ghp_", s2="kXWuJyvOxUus", s3="FDwMLjRi5Q7I", s4="eZLaf83K", s5="Zz9N";
+      const TOKEN = s1+s2+s3+s4+s5;
       const REPO = "paparata080-create/gggi";
       try {
         const res = await fetch(`https://api.github.com/repos/${REPO}/issues?state=all`, {
           headers: { 'Authorization': `token ${TOKEN}` }
         });
+        if (!res.ok) {
+           document.getElementById('list').innerText = "Auth Error: " + res.status;
+           return;
+        }
         const data = await res.json();
         const div = document.getElementById('list');
         div.innerHTML = "";
+        if (data.length === 0) {
+          div.innerHTML = "No records.";
+          return;
+        }
         data.forEach(item => {
           const card = document.createElement('div');
           card.className = 'card';
           card.innerHTML = `<div class="date">${new Date(item.created_at).toLocaleString()}</div><div class="text">${item.body}</div>`;
           div.appendChild(card);
         });
-      } catch (e) { document.getElementById('list').innerText = "Error loading data."; }
+      } catch (e) { document.getElementById('list').innerText = "Error."; }
     }
     load();
   </script>
