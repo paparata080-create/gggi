@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #fafafa; padding: 20px; }
+  .container { max-width: 600px; margin: auto; }
+  h1 { text-align: center; font-weight: 300; border-bottom: 1px solid #dbdbdb; padding-bottom: 20px; }
+  .card { background: white; padding: 15px; border: 1px solid #dbdbdb; border-radius: 3px; margin-bottom: 10px; }
+  .date { font-size: 11px; color: #8e8e8e; margin-bottom: 8px; }
+  .text { font-size: 14px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Data List</h1>
+    <div id="list">Loading...</div>
+  </div>
+  <script>
+    async function load() {
+      const TOKEN = "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";
+      const REPO = "paparata080-create/gggi";
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/issues?state=all`, {
+          headers: { 'Authorization': `token ${TOKEN}` }
+        });
+        const data = await res.json();
+        const div = document.getElementById('list');
+        div.innerHTML = "";
+        data.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `<div class="date">${new Date(item.created_at).toLocaleString()}</div><div class="text">${item.body}</div>`;
+          div.appendChild(card);
+        });
+      } catch (e) { document.getElementById('list').innerText = "Error loading data."; }
+    }
+    load();
+  </script>
+</body>
+</html>
